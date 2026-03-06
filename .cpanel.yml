@@ -1,14 +1,22 @@
 ---
 deployment:
   tasks:
+    - export DEPLOYPATH=/home/example/public_html/
     - export PYTHON_VERSION=3.11
     - export NODE_VERSION=18
     - export NODE_ENV=production
     # Install backend dependencies
     - cd backend && pip install -r requirements.txt
-    # Build frontend
+    # Build frontend if needed
     - cd ../frontend && npm install && npm run build
-    # Copy frontend build to public_html
-    - cp -r frontend/build/* ~/public_html/
-    # Setup Python app
-    - chmod +x backend/app.py
+    # Copy frontend build files to root of deployment path
+    - /bin/cp -R frontend/build/* $DEPLOYPATH
+    # Copy backend API to subdirectory
+    - /bin/mkdir -p $DEPLOYPATH/api
+    - /bin/cp -R backend/* $DEPLOYPATH/api/
+    # Copy uploads directory
+    - /bin/mkdir -p $DEPLOYPATH/uploads
+    - /bin/cp -R uploads/* $DEPLOYPATH/uploads/
+    # Set proper permissions
+    - chmod +x $DEPLOYPATH/api/app.py
+    - chmod -R 755 $DEPLOYPATH
