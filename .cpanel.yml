@@ -1,0 +1,7 @@
+---
+deployment:
+  tasks:
+    - export PYTHON_VERSION=3.14
+    - export NODE_VERSION=22.17.1
+    - /bin/bash backend/deploy.sh
+    - /bin/bash frontend/deploy.sh
