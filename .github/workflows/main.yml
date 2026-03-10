@@ -17,3 +17,4 @@ jobs:
           server: "mytoystore@footlooseadventures.com"
           username: "mytoystore@footlooseadventures.com"
           password: "Smk@is%a18Drag"
+          port: 21
