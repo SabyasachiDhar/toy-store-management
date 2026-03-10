@@ -1,24 +1,21 @@
----
-deployment:
-  tasks:
-    - export PYTHON_VERSION=3.11
-    - export NODE_VERSION=18
-    - export NODE_ENV=production
-    - export FLASK_ENV=production
-    # Install backend dependencies
-    - cd backend && pip install -r requirements.txt
-    # Build frontend
-    - cd ../frontend && npm install && npm run build
-    # Copy frontend build to public_html
-    - cp -r frontend/build/* ~/public_html/
-    # Setup Python app permissions
-    - chmod +x backend/application.py
-    - chmod +x backend/app.py
+name: Publish to cPanel
+description: Publish the project to cPanel using FTP.
+on:
+  push:
+    branches:
+      - master
+jobs:
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout-Repository-Action
+        uses: actions/checkout@v2
 
-# Configure the Python application for cPanel
-python_app:
-  script: backend/application.py
-  startup_file: backend/application.py
-  app_uri: /api/
-  static_app_alias: /
-  static_uri: /public_html/
+      - name: FTP-Deploy-Action
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+
